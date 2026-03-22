@@ -42,7 +42,23 @@ rx_img = reshape(rx_bits_clean, size(bw_img));
 ber = sum(tx_bits ~= rx_bits_clean) / length(tx_bits);
 fprintf('Achieved BER: %e\n', ber);
 
-% --- 6. Display Results (Chapter 7) ---
-figure('Name', 'Vector Data Validation', 'Color', 'w');
-subplot(1,2,1); imshow(bw_img); title('Original Vector (bike.png)');
-subplot(1,2,2); imshow(rx_img); title(['Received @ ', num2str(test_snr), 'dB (', num2str(M_adapt), '-QAM)']);
+% --- 6. Display Results (High Contrast Light Mode) ---
+fig = figure('Name', 'Vector Data Validation', 'Units', 'normalized', 'Position', [0.2, 0.3, 0.6, 0.4]);
+set(fig, 'Color', 'w'); % Set figure background to white
+
+% Original Image
+subplot(1,2,1); 
+imshow(bw_img, 'InitialMagnification', 'fit'); 
+title('Original Vector (bike.png)', 'Color', 'k', 'FontSize', 12, 'FontWeight', 'bold');
+set(gca, 'Color', 'w'); % Set axis background to white
+
+% Received Image
+subplot(1,2,2); 
+imshow(rx_img, 'InitialMagnification', 'fit'); 
+title(['Received @ ', num2str(test_snr), 'dB (', num2str(M_adapt), '-QAM)'], ...
+      'Color', 'k', 'FontSize', 12, 'FontWeight', 'bold');
+xlabel(['BER: ', num2str(ber, '%.2e')], 'Color', 'k'); % Optional: Display BER under plot
+set(gca, 'Color', 'w'); % Set axis background to white
+
+% Global font adjustments for clarity
+set(findall(fig,'-property','FontName'),'FontName','Arial');

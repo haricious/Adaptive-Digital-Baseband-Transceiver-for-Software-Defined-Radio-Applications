@@ -1,5 +1,4 @@
 clear; close all; clc;
-
 fprintf('Initializing PACT Architecture Simulation...\n');
 
 % --- 1. Global System Parameters ---
@@ -52,6 +51,34 @@ end
 
 fprintf('\nSimulation Complete! Generating plots...\n');
 
-% --- 3. Plotting Results ---
-% We will pass the data to our dedicated plotting function
-plot_metrics(params.snrRange, ber_adaptive, ber_fixed, mod_history);
+% --- 3. Plotting Results (High-Contrast Light Mode) ---
+fig = figure('Name', 'PACT System Performance Analysis', 'Color', 'w', ...
+             'Units', 'normalized', 'Position', [0.1, 0.1, 0.7, 0.4]);
+
+% --- Left Subplot: BER Performance ---
+subplot(1,2,1);
+semilogy(params.snrRange, ber_adaptive, '-ko', 'LineWidth', 1.5, 'MarkerFaceColor', 'k', 'DisplayName', 'Adaptive (PACT)');
+hold on;
+semilogy(params.snrRange, ber_fixed, '--k', 'LineWidth', 1.2, 'DisplayName', 'Fixed (QPSK)');
+grid on;
+set(gca, 'GridColor', [0.8 0.8 0.8], 'GridAlpha', 0.5); % Subtle light-gray grid
+xlabel('SNR (dB)', 'Color', 'k', 'FontWeight', 'bold');
+ylabel('Bit Error Rate (BER)', 'Color', 'k', 'FontWeight', 'bold');
+title('Error Performance', 'Color', 'k', 'FontSize', 12);
+legend('Location', 'southwest', 'TextColor', 'k', 'Color', 'w', 'EdgeColor', 'k');
+set(gca, 'Color', 'w', 'XColor', 'k', 'YColor', 'k');
+
+% --- Right Subplot: Modulation Adaptation ---
+subplot(1,2,2);
+stem(params.snrRange, mod_history, 'k', 'LineWidth', 1.5, 'MarkerFaceColor', 'w');
+grid on;
+set(gca, 'GridColor', [0.8 0.8 0.8], 'GridAlpha', 0.5);
+xlabel('SNR (dB)', 'Color', 'k', 'FontWeight', 'bold');
+ylabel('Modulation Order (M)', 'Color', 'k', 'FontWeight', 'bold');
+title('Cognitive Engine Decision', 'Color', 'k', 'FontSize', 12);
+yticks([4, 16, 64, 256]); % Standard QAM levels
+yticklabels({'4-QAM', '16-QAM', '64-QAM', '256-QAM'});
+set(gca, 'Color', 'w', 'XColor', 'k', 'YColor', 'k');
+
+% Global Font Fix
+set(findall(fig,'-property','FontName'), 'FontName', 'Arial');
